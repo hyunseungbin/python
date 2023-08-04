@@ -1,8 +1,0 @@
-{
-    "ENGINE": "django.db.backends.mysql",
-    "NAME": "hyuntestdb",
-    "USER": "python_hyun",
-    "PASSWORD": "StrongPass123@",
-    "HOST": "20.39.197.243",
-    "PORT": "3306"
-}

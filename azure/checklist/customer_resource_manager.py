@@ -1,5 +1,6 @@
 import requests
 import json
+import adal
 import msal
 from lib import azure_restapi_urilist
 

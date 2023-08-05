@@ -23,3 +23,14 @@ class mssql:
 
         return query_data
     
+    def app_auth_info(self,query):
+        auth_list = []
+        ## 명명 튜플로 각 고객사 정보 구별
+        app_info = namedtuple('auth_info','subscription_id subscription_name tenant_id app_id app_key')
+        ## 고객사 앱 정보 테이블에 mssql select 쿼리를 통해
+        
+        app_auth_info = self.database_query(query)
+        for app_auth in app_auth_info:
+            info = app_info._make(app_auth)
+            auth_list.append(info._asdict())
+        return auth_list

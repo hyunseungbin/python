@@ -30,7 +30,7 @@ while True:
         r = requests.get(url)
         ns = BeautifulSoup(r.text, "lxml")
         mainContent = ns.select_one("div.se-main-container")
-        print(mainContent)
+        print(str(mainContent)[:100])
 
     bs = BeautifulSoup(paging_list, "lxml")
     next_tag = bs.select_one("a.next")

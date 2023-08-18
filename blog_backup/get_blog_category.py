@@ -14,8 +14,6 @@ json = hjson.loads(r.text)
 
 category_html = json.get('category').get('content')
 
-import pprint
-
 category = {}
 
 bs = BeautifulSoup(category_html, "lxml")
@@ -31,4 +29,3 @@ for lk in links:
         category[category_id] = category_name
         
 print(category)
-    

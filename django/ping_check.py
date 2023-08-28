@@ -2,6 +2,7 @@ import time
 from ping3 import ping
 from plyer import notification
 
+
 def check_network(target_host, interval):
     while True:
         response_time = ping(target_host)
@@ -16,6 +17,7 @@ def check_network(target_host, interval):
             )
 
         time.sleep(interval)
+
 
 if __name__ == "__main__":
     target_host = "8.8.8.8"  # Change this to the target host you want to monitor

@@ -1,0 +1,28 @@
+## Server version: 8.0.33-0ubuntu0.20.04.4 (Ubuntu)
+
+CREATE TABLE info_category(
+    id INT NOT NULL AUTO_INCREMENT,
+    type VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY(id),
+    UNIQUE KEY email (type)
+);
+
+CREATE TABLE users_follow_list(
+    user_id INT NOT NULL,
+    follow_user_id INT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(user_id, follow_user_id),
+    CONSTRAINT users_follow_list_user_id_fkey FOREIGN KEY (user_id) REFERENCES users_profile(id),
+    CONSTRAINT users_follow_list_follow_user_id_fkey FOREIGN KEY (follow_user_id) REFERENCES users_profile(id)
+);
+
+CREATE TABLE tweets(
+    id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    tweet VARCHAR(300) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(id),
+    CONSTRAINT tweets_user_id_fkey FOREIGN KEY (user_id) REFERENCES users_profile(id)
+);

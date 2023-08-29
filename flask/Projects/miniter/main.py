@@ -3,8 +3,6 @@ from flask.json import JSONEncoder
 import db_config
 from sqlalchemy import create_engine, text
 
-import mysql.connector
-
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -168,9 +166,21 @@ def tweet():
 @app.route("/follow", methods=["POST"])
 def follow():
     payload = request.json
-    user_id = int(payload["id"])
+    user_name = int(payload["name"])
+    user_id_row = current_app.database.execute(
+        text("SELECT id FROM users_profile WHERE name = :name"),
+        {"name": user_name},
+    ).fetchone()
+    app.database.commit()
+    if not user_id_row:
+        return "사용자가 존재하지 않습니다.", 400
+
+    user_id = user_id_row[0]  # Extract the user ID from the row
+
     user_id_to_follow = int(payload["follow"])
 
+    tweet_data = payloads["tweet"]
+    tweet_name = payloads["name"]
     if user_id not in app.users and user_id_to_follow not in app.users:
         return "사용자가 존재하지 않습니다.", 400
 
@@ -201,12 +211,33 @@ def unfollow():
 ## 사용자 타임라인 만들기
 @app.route("/timeline/<int:user_id>", methods=["GET"])
 def timeline(user_id):
-    if user_id not in app.users:
-        return "사용자가 존재하지 않습니다.", 400
+    users_rows = current_app.database.execute(
+        text(
+            """
+             SELECT 
+             t.user_id,
+             t.tweet 
+             FROM tweets t
+             LEFT JOIN users_follow_list ufl ON ufl.user_id = :user_id
+             WHERE t.user_id = :user_id
+             OR t.user_id = ufl.follow_user_id
+             """
+        ),
+        {"user_id": user_id},
+    ).fetchall()
 
-    follow_list = app.users[user_id].get("follow", set)
-    follow_list.add(user_id)
+    timeline = [
+        {"user_id": row["user_id"], "tweet": row["tweet"]} for row in users_rows
+    ]
 
-    timeline = [tweet for tweet in app.tweets if tweet["user_id"] in follow_list]
+    return jsonify({"user_id": user_id, "timeline": timeline})
+
+    # if user_id not in app.users:
+    #     return "사용자가 존재하지 않습니다.", 400
+
+    # follow_list = app.users[user_id].get("follow", set)
+    # follow_list.add(user_id)
+
+    # timeline = [tweet for tweet in app.tweets if tweet["user_id"] in follow_list]
 
     return jsonify({"user_id": user_id, "timeline": timeline})

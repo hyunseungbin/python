@@ -11,7 +11,7 @@ home_db = {
     "host": "20.39.197.243",
     "user": "office",
     "password": "Strongpassword123!",
-    "database": "hyuntestdb",
+    "database": "chatbot",
     "port": 3306,
 }
 
